@@ -39,12 +39,12 @@ print u'输入需要查找的关键词, 使用空格分隔, 输入 -c 修改需�
 print u'当前路径:', userPath
 while True:
     userInput = raw_input(PROMPT)
-    if userInput == 'exit' or userInput == 'quit':
-        break
     while userInput == '-c':
         while not set_path():
             pass
         userInput = raw_input(PROMPT)
+    if userInput == 'exit' or userInput == 'quit':
+        break
     pattern = '(.*)' + userInput.lower().replace(' ', '(.*)') + '(.*)'
     for filePath, dirNames, fileNames in os.walk(userPath):
         for filename in fileNames:
@@ -52,8 +52,8 @@ while True:
             with open(path) as userFile:
                 for lineNumber, rawLine in enumerate(userFile):
                     det = chardet.detect(rawLine)
-                    # if det['encoding'] == 'windows-1252':
-                    #     break
+                    if det['encoding'] == None:
+                        continue
                     detLine = rawLine.decode(det['encoding'], 'ignore').encode('gbk', 'ignore')
                     if re.match(pattern, detLine.lower()):
                         print u'==============================================================================='
