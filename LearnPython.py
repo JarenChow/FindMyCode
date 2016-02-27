@@ -18,15 +18,15 @@ def get_path():
 def set_path():
     """设置用户需要搜索的路径"""
     global userPath
-    print u'拖入需要查找的文件的目录:'
+    print u'***  拖入需要查找的文件的目录:'
     userPath = raw_input(PROMPT).replace('/', '\\')
     if os.path.isdir(userPath):
         with open(CFG_PATH, 'w') as cfgFile:
             cfgFile.write(userPath)
-            print u'设置成功'
+            print u'***  设置成功'
             return True
     else:
-        print u'路径输入错误'
+        print u'***  路径输入错误'
         return False
 
 
@@ -35,8 +35,10 @@ userPath = get_path()
 if userPath is None or userPath is '':
     while not set_path():
         pass
-print u'输入需要查找的关键词, 使用空格分隔, 输入 -c 修改需要查找的路径'
-print u'当前路径:', userPath
+print u'''***  输入需要查找的关键词, 使用空格分隔
+***  输入 -c 修改需要查找的路径
+***  展示最多10条搜索结果
+***  当前路径:''', userPath
 while True:
     userInput = raw_input(PROMPT)
     while userInput == '-c':
@@ -47,15 +49,23 @@ while True:
         break
     pattern = '(.*)' + userInput.lower().replace(' ', '(.*)') + '(.*)'
     for filePath, dirNames, fileNames in os.walk(userPath):
+        count = 10
         for filename in fileNames:
+            if not count:
+                break
             path = os.path.join(filePath, filename)
+            if os.path.getsize(path) > 0.5 * 1024 * 1024:
+                continue
             with open(path) as userFile:
                 for lineNumber, rawLine in enumerate(userFile):
+                    if not count:
+                        break
                     det = chardet.detect(rawLine)
-                    if det['encoding'] == None:
+                    if det['encoding'] is None:
                         continue
                     detLine = rawLine.decode(det['encoding'], 'ignore').encode('gbk', 'ignore')
                     if re.match(pattern, detLine.lower()):
+                        count -= 1
                         print u'==============================================================================='
                         print u'文件:', path
                         print u'行号:', lineNumber + 1
