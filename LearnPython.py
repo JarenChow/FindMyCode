@@ -2,6 +2,7 @@
 import os
 import chardet
 import re
+import time
 
 CFG_PATH = r'C:\Users\Administrator\FindCode.ini'
 PROMPT = '>>> '
@@ -37,10 +38,11 @@ if userPath is None or userPath is '':
         pass
 print u'''***  输入需要查找的关键词, 使用空格分隔
 ***  输入 -c 修改需要查找的路径
-***  展示最多10条搜索结果
+***  展示最多 10 条搜索结果
 ***  当前路径:''', userPath
 while True:
     userInput = raw_input(PROMPT)
+    # tmpTime = time.time()
     while userInput == '-c':
         while not set_path():
             pass
@@ -54,16 +56,17 @@ while True:
             if not count:
                 break
             path = os.path.join(filePath, filename)
-            if os.path.getsize(path) > 0.5 * 1024 * 1024:
+            if os.path.getsize(path) > 1 * 1024 * 1024:
                 continue
             with open(path) as userFile:
                 for lineNumber, rawLine in enumerate(userFile):
                     if not count:
                         break
-                    det = chardet.detect(rawLine)
-                    if det['encoding'] is None:
-                        continue
-                    detLine = rawLine.decode(det['encoding'], 'ignore').encode('gbk', 'ignore')
+                    # det = chardet.detect(rawLine)
+                    # if det['encoding'] is None:
+                    #     continue
+                    detLine = rawLine.decode('UTF-8', 'ignore')
+                    # detLine = rawLine.decode(det['encoding'], 'ignore').encode('gbk', 'ignore')
                     if re.match(pattern, detLine.lower()):
                         count -= 1
                         print u'==============================================================================='
@@ -71,3 +74,6 @@ while True:
                         print u'行号:', lineNumber + 1
                         print u'内容:', detLine.strip('\n')
     print u'==============================================================================='
+    # print time.time() - tmpTime
+
+
