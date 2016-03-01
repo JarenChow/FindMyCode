@@ -65,7 +65,7 @@ while True:
                     # det = chardet.detect(rawLine)
                     # if det['encoding'] is None:
                     #     continue
-                    detLine = rawLine.decode('UTF-8', 'ignore')
+                    detLine = rawLine.decode('UTF-8', 'ignore').encode('GBK', 'ignore')
                     # detLine = rawLine.decode(det['encoding'], 'ignore').encode('gbk', 'ignore')
                     if re.match(pattern, detLine.lower()):
                         count -= 1
