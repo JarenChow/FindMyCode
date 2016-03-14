@@ -13,3 +13,5 @@
 	* '测'试'文'本
 	* '测'量'文'章
 	* 现在探 '测' '文' abc
+
+![image](https://github.com/M3oM3oBug/FindMyCode/raw/master/FindCode.gif)
